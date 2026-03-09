@@ -30,7 +30,7 @@ export default function Home() {
           Catch broken layouts, missing translations, and locale regressions automatically — on every PR, before your users ever see them.
         </span>
         <Button size="default" onClick={signInWithGithub} className="rounded-lg bg-[#107A4D] cursor-pointer">
-          <Image src="/Github_Symbol_0.svg" alt="Github logo" width={16} height={16} />
+          <Image src="/githubsymbol.png" alt="Github logo" width={16} height={16} />
           <span className="font-sans tracking-[-0.05em] text-base font-normal text-white">Sign in using Github</span>
         </Button>
       </main>
