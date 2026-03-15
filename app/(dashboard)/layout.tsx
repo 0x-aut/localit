@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+"use client";
+
+// import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,11 +9,17 @@ import "@/app/globals.css";
 
 // Shadcn Components import
 import { Button } from "@/components/ui/button"
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
-  PanelRight, Blocks,
-  BriefcaseBusiness, CreditCard,
-  Settings2, Workflow
+  DropdownMenu, DropdownMenuContent,
+  DropdownMenuGroup, DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+
+// Lucide icons import
+import {
+  Boxes, ChevronsUpDown,
+  Box
 } from "lucide-react";
 
 
@@ -25,10 +33,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Witness App",
-  description: "The system has lawyers. Now you have Witness.",
-};
+// export const metadata: Metadata = {
+//   title: "Localit | Dashboard",
+//   description: "Test your webapp for ui locale errors",
+// };
 
 
 export default function MainLayout({
@@ -37,47 +45,56 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0A0A0A]`}>
       <body
-        className="flex font-sans h-screen w-full bg-white overflow-hidden"
+        className="flex flex-col font-sans h-screen w-full bg-[#0A0A0A] overflow-hidden text-white"
       >
-        <aside className="flex flex-col justify-between w-50 pl-3 pr-3 pb-3 h-screen gap-y-1 border-r">
-          <div className="">
-            <div className="flex pt-2.5 pb-2.5 pl-0 pr-0 justify-between items-center">
-              <Link href="/" className="">
-                <Image src="/witness-logo.svg" width={77} height={18} alt="Witness logo" />
+        <nav className="flex w-full justify-between h-10 pl-2 pr-2 items-center border-b border-[#2A2A2A]">
+          <div className="flex items-center gap-x-3">
+            <span className="font-sans text-xs">Localit</span>
+            <span className="font-sans text-xs text-[#555555]">/</span>
+            <div className="flex items-center gap-x-3 cursor-pointer">
+              <Link href="/" className="flex items-center gap-x-2 cursor-pointer">
+                <Boxes size={14} strokeWidth={1.5} color="#555555" />
+                <span className="font-sans text-xs tracking-[-0.05em] font-normal text-[#EDEDED]">Group</span>
               </Link>
-              <Button size="icon-sm" variant="ghost">
-                <PanelRight strokeWidth={1.5} size={14} />
+              <Button variant="ghost" size="icon-sm" className="hover:bg-[#1A1A1A]">
+                <ChevronsUpDown size={16} color="#555555" strokeWidth={1.5} />
               </Button>
             </div>
-            <div className="flex flex-col gap-y-1">
-              <Link href="/assistant" className="flex border rounded-sm gap-x-2.5 items-center justify-start p-1.25 bg-[#D9D9D9]">
-                <Blocks size={18} color="#121212" strokeWidth={1.5} />
-                <span className="font-sans text-sm font-normal tracking-[-0.05em]">Dashboard</span>
+            <span className="font-sans text-xs text-[#555555]">/</span>
+            <div className="flex items-center gap-x-3 cursor-pointer">
+              <Link href="/" className="flex items-center gap-x-2 cursor-pointer">
+                <Box size={14} strokeWidth={1.5} color="#555555" />
+                <span className="font-sans text-xs tracking-[-0.05em] font-normal text-[#EDEDED]">Project</span>
               </Link>
-              <Link href="/" className="flex rounded-lg gap-x-2.5 items-center justify-start p-1.25">
-                <BriefcaseBusiness size={18} color="#121212" strokeWidth={1.5} />
-                <span className="font-sans text-sm font-normal tracking-[-0.05em]">Runs</span>
-              </Link>
-              <Link href="/" className="flex rounded-lg gap-x-2.5 items-center justify-start p-1.25">
-                <Workflow size={18} color="#121212" strokeWidth={1.5} />
-                <span className="font-sans text-sm font-normal tracking-[-0.05em]">Workflow</span>
-              </Link>
+              <Button variant="ghost" size="icon-sm" className="hover:bg-[#1A1A1A]">
+                <ChevronsUpDown size={16} color="#555555" strokeWidth={1.5} />
+              </Button>
             </div>
-        </div>
-          <div className="">
-            <Link href="/" className="flex rounded-lg gap-x-2.5 items-center justify-start p-1.25">
-              <CreditCard size={18} color="#121212" strokeWidth={1.5} />
-              <span className="font-sans text-sm font-normal tracking-[-0.05em]">Billing</span>
-            </Link>
-            <Link href="/" className="flex rounded-lg gap-x-2.5 items-center justify-start p-1.25">
-              <Settings2 size={18} color="#121212" strokeWidth={1.5} />
-              <span className="font-sans text-sm font-normal tracking-[-0.05em]">Settings</span>
-            </Link>
           </div>
-        </aside>
-        <main className="flex-1">{children}</main>
+          {/*This will contains the avatar icon with account dropdown*/}
+          <div className="flex items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar size="sm" className="bg-[#1A1A1A] border border-[#D9D9D9] cursor-pointer">
+                  <AvatarImage src="/githubsymbol.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-[#1A1A1A] text-[#EDEDED]">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </nav>
+        <div className="flex flex-1 overflow-hidden">
+          <main className="flex-1">{children}</main>
+        </div>
       </body>
     </html>
   );

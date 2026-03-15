@@ -21,12 +21,12 @@ export default function Home() {
   
   
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white">
+    <div className="flex min-h-screen items-center justify-center bg-[#0A0A0A]">
       <main className="flex flex-col gap-y-4 min-h-screen w-full justify-center items-center">
-        <span className="font-sans tracking-[-0.05em] text-black text-4xl font-medium">
+        <span className="font-sans tracking-[-0.05em] text-white text-4xl font-medium">
           Build for teams who ship globally. Powered by Lingo.dev
         </span>
-        <span className="font-sans tracking-[-0.05em] text-base text-black w-100 text-center">
+        <span className="font-sans tracking-[-0.05em] text-base text-white w-100 text-center">
           Catch broken layouts, missing translations, and locale regressions automatically — on every PR, before your users ever see them.
         </span>
         <Button size="default" onClick={signInWithGithub} className="rounded-lg bg-[#107A4D] cursor-pointer">
