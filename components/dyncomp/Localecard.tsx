@@ -18,7 +18,7 @@ type LocaleCardProps = {
 };
 
 type LocalePanelProps = {
-  locales: Omit<LocaleCardProps, "isSelected" | "onClick">[];
+  locales?: Omit<LocaleCardProps, "isSelected" | "onClick">[];
   selectedLocale: string;
   onLocaleSelect: (code: string) => void;
 };
