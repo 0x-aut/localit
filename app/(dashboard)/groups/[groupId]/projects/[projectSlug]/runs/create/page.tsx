@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Plus, X, ChevronRight, Globe, GitBranch, Route, Settings2 } from "lucide-react";
+import { createRun } from "./actions";
 
 const SUPPORTED_LOCALES = [
   { code: "de", country: "Germany", flag: "DE" },
@@ -125,6 +126,7 @@ function LocalePill({
 
 export default function CreateRunPage() {
   const router = useRouter();
+  const params = useParams();
 
   // ── Step 1: Repo details ──────────────────────────────────────────────────
   const [repoUrl, setRepoUrl] = useState("");
@@ -139,6 +141,9 @@ export default function CreateRunPage() {
   // ── Step 3: Routes ────────────────────────────────────────────────────────
   const [autoDetect, setAutoDetect] = useState(true);
   const [manualRoutes, setManualRoutes] = useState("/\n/checkout\n/dashboard");
+  
+  // Error state
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -158,16 +163,33 @@ export default function CreateRunPage() {
     repoUrl.trim() !== "" &&
     targetLocales.length > 0 &&
     (autoDetect || routes.length > 0);
+  
+  const groupId = params.groupId as string;
+  const projectSlug = params.projectSlug as string;
 
   const handleSubmit = async () => {
-    if (!isValid) return;
-    setIsSubmitting(true);
-
-    // TODO: save config to Supabase + trigger GitHub Action via workflow_dispatch
-    await new Promise((r) => setTimeout(r, 1200)); // placeholder
-
-    router.push("/runs");
-  };
+      if (!isValid) return;
+      setIsSubmitting(true);
+  
+      const result = await createRun({
+        groupId,
+        projectSlug,
+        repoUrl: repoUrl.trim(),
+        branch: branch.trim(),
+        targetUrl: targetUrl.trim(),
+        sourceLocale,
+        targetLocales,
+        coverageThreshold: parseInt(coverageThreshold),
+        autoDetect,
+        routes,
+      });
+  
+      if (result?.error) {
+        // show error — add an error state
+        setSubmitError(result.error);
+        setIsSubmitting(false);
+      }
+    };
 
   return (
     <div className="flex flex-col w-full h-full items-center overflow-y-auto px-4 py-4 gap-y-6">
@@ -432,6 +454,12 @@ export default function CreateRunPage() {
                 : targetLocales.length === 0
                 ? "Select at least one target locale"
                 : "Add at least one route or enable auto-detect"}
+            </span>
+          )}
+          
+          {submitError && (
+            <span className="font-sans text-xs tracking-[-0.05em] text-[#EF4444]">
+              {submitError}
             </span>
           )}
 

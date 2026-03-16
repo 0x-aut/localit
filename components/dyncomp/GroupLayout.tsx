@@ -1,29 +1,34 @@
 "use client";
 
-import { House, VectorSquare, Settings2 } from "lucide-react";
+import {
+  Boxes,
+  FolderGit2,
+  Users,
+  BarChart2,
+  CreditCard,
+  Settings2,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-export function ProjectLayout({
-  groupId,
-  projectSlug,
-}: {
+type GroupLayoutProps = {
   groupId: string;
-  projectSlug: string;
-}) {
+};
+
+export function GroupLayout({ groupId }: GroupLayoutProps) {
   const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const base = `/groups/${groupId}/projects/${projectSlug}`;
-
   const navItems = [
-    { href: `${base}`, icon: House, label: "Overview" },
-    { href: `${base}/runs`, icon: VectorSquare, label: "Runs" },
+    { href: `/groups/${groupId}`, icon: Boxes, label: "Projects" },
+    { href: `/groups/${groupId}/team`, icon: Users, label: "Team" },
+    { href: `/groups/${groupId}/usage`, icon: BarChart2, label: "Usage" },
+    { href: `/groups/${groupId}/billing`, icon: CreditCard, label: "Billing" },
   ];
-
+  
   const bottomItems = [
-    { href: `${base}/settings`, icon: Settings2, label: "Settings" },
+    { href: `/groups/${groupId}/settings`, icon: Settings2, label: "Settings" },
   ];
 
   return (
@@ -36,9 +41,7 @@ export function ProjectLayout({
     >
       <div className="flex flex-col gap-y-1 flex-1">
         {navItems.map(({ href, icon: Icon, label }) => {
-          const isActive = href === base
-            ? pathname === base
-            : pathname === href || pathname.startsWith(href + "/");
+          const isActive = pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
               key={href}

@@ -12,3 +12,4 @@ Green hover       #0D6B42
 Pass green        #22C55E
 Fail red          #EF4444
 Warning amber     #F59E0B
+

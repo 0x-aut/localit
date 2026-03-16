@@ -36,5 +36,7 @@ export type RepoRunProps = {
   totalErrors: number;
   runStatus: "passed" | "failed" | null;
   runTimeStamp: string;
-  runId: string; // May actually be the same as the id
+  runId: string;
+  groupId: string;
+  projectSlug: string;
 };

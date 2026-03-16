@@ -83,25 +83,42 @@ const mockRoutes: RouteItemProps[] = [
   },
 ];
 
-function ScreenshotPanel({ screenshots }: { screenshots: RouteScreenshots }) {
+function ScreenshotPanel({
+  screenshots,
+  selectedLocale,
+}: {
+  screenshots: RouteScreenshots;
+  selectedLocale?: string;
+}) {
+  const panels = [
+    { label: "Baseline (en)", src: screenshots.baseline },
+    { label: `Current (${selectedLocale ?? "?"})`, src: screenshots.current },
+    { label: "Diff", src: screenshots.diff },
+  ];
+
   return (
     <div className="flex gap-x-2 overflow-x-auto pb-2">
-      {[
-        { label: "Baseline (en)", src: screenshots.baseline },
-        { label: "Current (de)", src: screenshots.current },
-        { label: "Diff", src: screenshots.diff },
-      ].map(({ label, src }) => (
+      {panels.map(({ label, src }) => (
         <div key={label} className="flex flex-col gap-y-1 shrink-0">
           <span className="font-sans text-xs text-[#A1A1A1] tracking-[-0.05em]">
             {label}
           </span>
           <div className="w-48 h-32 bg-[#1A1A1A] rounded-sm border border-[#2A2A2A] overflow-hidden relative">
-            <Image
-              src={src}
-              alt={label}
-              fill
-              className="object-cover object-top"
-            />
+            {src ? (
+              <Image
+                src={src}
+                alt={label}
+                fill
+                className="object-cover object-top"
+                unoptimized
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full">
+                <span className="font-sans text-xs text-[#555555] tracking-[-0.05em]">
+                  No screenshot
+                </span>
+              </div>
+            )}
           </div>
         </div>
       ))}
@@ -155,17 +172,24 @@ function IssuesList({ issues, diffPct }: { issues: Issue[]; diffPct: number }) {
   );
 }
 
-export function RouteView() {
-  // first route with issues auto-opens
-  const defaultOpen = mockRoutes.find((r) => r.hasIssues)?.route ?? mockRoutes[0].route;
+type RouteViewProps = {
+  routes?: RouteItemProps[];
+  selectedLocale?: string;
+};
+
+export function RouteView({
+  routes = mockRoutes,
+  selectedLocale = "de",
+}: RouteViewProps) {
+  const defaultOpen = routes!.find((r) => r.hasIssues)?.route ?? routes![0]?.route;
 
   return (
     <Accordion
       type="multiple"
-      defaultValue={[defaultOpen]}
+      defaultValue={defaultOpen ? [defaultOpen] : []}
       className="w-full flex flex-col gap-y-0.5"
     >
-      {mockRoutes.map((item) => (
+      {routes!.map((item) => (
         <AccordionItem
           key={item.route}
           value={item.route}
@@ -189,7 +213,10 @@ export function RouteView() {
             )}
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-y-2 pb-3">
-            <ScreenshotPanel screenshots={item.screenshots} />
+            <ScreenshotPanel
+              screenshots={item.screenshots}
+              selectedLocale={selectedLocale}
+            />
             <IssuesList issues={item.issues} diffPct={item.diffPct} />
           </AccordionContent>
         </AccordionItem>

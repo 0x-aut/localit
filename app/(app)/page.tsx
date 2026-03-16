@@ -13,7 +13,7 @@ export default function Home() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `https://jnmyaqlmiizebvfflctd.supabase.co/auth/v1/callback`,
+        redirectTo: process.env.NEXT_PUBLIC_AUTH_CALLBACK_URL!,
       },
     })
     

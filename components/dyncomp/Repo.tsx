@@ -112,7 +112,7 @@ export function RepoHealthCard({
   locales,
 }: RepoHealthCardProps) {
   return (
-    <div className="flex flex-col gap-y-2 px-1 py-1 border rounded-sm bg-[#1A1A1A] border-[#2A2A2A]">
+    <div className="flex flex-col h-38.75 gap-y-2 px-1 py-1 border rounded-sm bg-[#1A1A1A] border-[#2A2A2A]">
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-0.5">
           <div className="flex gap-x-2 items-center">
@@ -179,12 +179,14 @@ export function RepoRun({
   runStatus,
   runTimeStamp,
   runId,
+  groupId,
+  projectSlug,
 }: RepoRunProps
 ) {
   const router = useRouter();
   return (
     <div
-      onClick={() => router.push(`/runs/${runId}`)}
+      onClick={() => router.push(`/groups/${groupId}/projects/${projectSlug}/runs/${runId}`)}
       className="flex w-full justify-between items-center cursor-pointer border border-t-0 border-b-[#2A2A2A] border-l-0 border-r-0 py-3 px-2"
     >
       {/* Repo name + GitHub link */}
@@ -259,8 +261,8 @@ export function RepoRun({
           size="icon-sm"
           className="text-[#A1A1A1] hover:bg-[#1A1A1A] hover:text-[#A1A1A1]"
           onClick={(e) => {
-            e.stopPropagation()
-            router.push(`/run/${runId}`)
+            e.stopPropagation();
+            router.push(`/groups/${groupId}/projects/${projectSlug}/runs/${runId}`);
           }}
         >
           <SquareArrowOutUpRight />

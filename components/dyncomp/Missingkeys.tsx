@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { Check } from "lucide-react";
 
 type MissingKey = {
   locale: string;
@@ -190,8 +191,9 @@ export function MissingKeysTable({
       {/* Empty state */}
       {filtered.length === 0 ? (
         <div className="flex items-center justify-center py-6">
+          <Check size={12} color="#EDEDED" />
           <span className="font-sans text-sm tracking-[-0.05em] text-[#22C55E]">
-            ✓ All keys translated
+            All keys translated
           </span>
         </div>
       ) : (
