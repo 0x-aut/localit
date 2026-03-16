@@ -61,9 +61,9 @@ export default function CreateGroupPage() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full px-4 py-4 gap-y-6">
+    <div className="flex flex-col justify-center items-center w-full h-full px-4 py-4 gap-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center w-[448px] justify-between">
         <div className="flex flex-col gap-y-0.5">
           <span className="font-sans text-base font-normal tracking-[-0.05em] text-[#EDEDED]">
             Create Group
@@ -80,7 +80,7 @@ export default function CreateGroupPage() {
         </button>
       </div>
 
-      <div className="flex flex-col gap-y-4 max-w-md">
+      <div className="flex flex-col gap-y-4 w-md max-w-md">
         <div className="flex flex-col gap-y-4 p-4 rounded-lg border border-[#2A2A2A] bg-[#111111]">
           {/* Group name */}
           <div className="flex flex-col gap-y-1.5">

@@ -11,8 +11,7 @@ import {
   DropdownMenuGroup, DropdownMenuTrigger,
   DropdownMenuItem, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Boxes, ChevronsUpDown, Box, Plus, Dot, Check } from "lucide-react";
-import { signOut } from "@/app/actions/auth";
+import { Boxes, ChevronsUpDown, Box, Plus, Check } from "lucide-react";
 
 type Group = { id: string; name: string; slug: string };
 type Project = { id: string; name: string; slug: string };
@@ -28,9 +27,8 @@ export function MainLayoutComp() {
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // Extract groupId and projectSlug from pathname
-  // e.g. /groups/abc-123/projects/my-project/runs
   const groupId = pathname.match(/\/groups\/([^/]+)/)?.[1] ?? null;
   const projectSlug = pathname.match(/\/projects\/([^/]+)/)?.[1] ?? null;
 
@@ -41,8 +39,8 @@ export function MainLayoutComp() {
 
       setAvatarUrl(user.user_metadata?.avatar_url ?? null);
       setUserName(user.user_metadata?.user_name ?? user.user_metadata?.full_name ?? null);
+      setUserEmail(user.email ?? null);
 
-      // Fetch all groups user belongs to
       const { data: memberships } = await supabase
         .from("group_members")
         .select("groups(id, name, slug)")
@@ -58,7 +56,6 @@ export function MainLayoutComp() {
         const found = allGroups.find((g) => g.id === groupId);
         setCurrentGroup(found ?? null);
 
-        // Fetch all projects for current group
         const { data: projectData } = await supabase
           .from("projects")
           .select("id, name, slug")
@@ -78,6 +75,12 @@ export function MainLayoutComp() {
 
     fetchData();
   }, [pathname]);
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <>
@@ -150,7 +153,7 @@ export function MainLayoutComp() {
               <div className="flex items-center gap-x-1">
                 {currentProject ? (
                   <Link
-                    href={`/groups/${currentGroup.id}/projects/${currentProject.slug}/dashboard`}
+                    href={`/groups/${currentGroup.id}/projects/${currentProject.slug}`}
                     className="flex items-center gap-x-1.5 cursor-pointer"
                   >
                     <Box size={14} strokeWidth={1.5} color="#555555" />
@@ -187,7 +190,7 @@ export function MainLayoutComp() {
                             key={project.id}
                             onClick={() =>
                               router.push(
-                                `/groups/${currentGroup.id}/projects/${project.slug}/dashboard`
+                                `/groups/${currentGroup.id}/projects/${project.slug}/`
                               )
                             }
                             className={`cursor-pointer gap-x-px text-xs font-sans tracking-[-0.05em] ${
@@ -238,24 +241,30 @@ export function MainLayoutComp() {
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-[#1A1A1A] border-[#2A2A2A] text-[#EDEDED]">
-              <DropdownMenuGroup>
+            <DropdownMenuContent
+              align="end"
+              className="bg-[#1A1A1A] border-[#2A2A2A] text-[#EDEDED] min-w-48"
+            >
+              {/* User info block */}
+              <div className="flex flex-col gap-y-0.5 px-2 py-2">
                 {userName && (
-                  <DropdownMenuItem
-                    disabled
-                    className="text-xs font-sans tracking-[-0.05em] text-[#555555]"
-                  >
+                  <span className="font-sans text-xs tracking-[-0.05em] text-[#EDEDED] font-medium">
                     {userName}
-                  </DropdownMenuItem>
+                  </span>
                 )}
-                <DropdownMenuSeparator className="bg-[#2A2A2A]" />
-                <DropdownMenuItem
-                  onClick={() => signOut()}
-                  className="cursor-pointer text-xs font-sans tracking-[-0.05em] text-[#EDEDED]"
-                >
-                  Sign out
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+                {userEmail && (
+                  <span className="font-sans text-[11px] tracking-[-0.05em] text-[#555555]">
+                    {userEmail}
+                  </span>
+                )}
+              </div>
+              <DropdownMenuSeparator className="bg-[#2A2A2A]" />
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                className="cursor-pointer text-xs font-sans tracking-[-0.05em] text-[#EF4444] hover:text-[#EF4444] focus:text-[#EF4444]"
+              >
+                Sign out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -14,6 +14,7 @@ type CreateRunInput = {
   coverageThreshold: number;
   autoDetect: boolean;
   routes: string[];
+  localeStrategy: string;
 };
 
 export async function createRun(input: CreateRunInput) {
@@ -46,8 +47,9 @@ export async function createRun(input: CreateRunInput) {
       routes: input.autoDetect ? [] : input.routes,
       auto_detect_routes: input.autoDetect,
       coverage_threshold: input.coverageThreshold,
+      locale_strategy: input.localeStrategy,  // ← add this
     })
-    .eq("id", project.id);
+    .eq("id", project.id)
 
   // Generate a placeholder commit SHA for now
   // In production this comes from the GitHub Action

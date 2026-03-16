@@ -14,6 +14,7 @@ type Issue = {
   selector?: string;
   description: string;
   diffPct?: number;
+  aiAnalysis?: { message: string[] } | null; 
 };
 
 type RouteScreenshots = {
@@ -129,6 +130,8 @@ function ScreenshotPanel({
 function IssuesList({ issues, diffPct }: { issues: Issue[]; diffPct: number }) {
   return (
     <div className="flex flex-col gap-y-1 mt-2">
+
+      {/* Pixel diff percentage row */}
       <div className="flex items-center gap-x-1.5">
         <span className="font-sans text-xs text-[#A1A1A1] tracking-[-0.05em]">
           Pixel diff:
@@ -151,19 +154,40 @@ function IssuesList({ issues, diffPct }: { issues: Issue[]; diffPct: number }) {
           {issues.map((issue, i) => (
             <div
               key={i}
-              className="flex items-start gap-x-2 py-1 px-1.5 rounded-sm bg-[#1A1A1A] border border-[#2A2A2A]"
+              className="flex flex-col gap-y-1 py-1 px-1.5 rounded-sm bg-[#1A1A1A] border border-[#2A2A2A]"
             >
-              <CircleX size={12} color="#EF4444" className="mt-0.5 shrink-0" />
-              <div className="flex flex-col gap-y-0.5">
-                {issue.selector && (
-                  <span className="font-mono text-xs text-[#A1A1A1] tracking-[-0.05em]">
-                    {issue.selector}
+              {/* Issue header row */}
+              <div className="flex items-start gap-x-2">
+                <CircleX size={12} color="#EF4444" className="mt-0.5 shrink-0" />
+                <div className="flex flex-col gap-y-0.5">
+                  {issue.selector && (
+                    <span className="font-mono text-xs text-[#A1A1A1] tracking-[-0.05em]">
+                      {issue.selector}
+                    </span>
+                  )}
+                  <span className="font-sans text-xs text-[#555555] tracking-[-0.05em]">
+                    {issue.description}
                   </span>
-                )}
-                <span className="font-sans text-xs text-[#555555] tracking-[-0.05em]">
-                  {issue.description}
-                </span>
+                </div>
               </div>
+
+              {/* AI reasons list — only for pixel_diff */}
+              {issue.type === "pixel_diff" &&
+                issue.aiAnalysis?.message &&
+                issue.aiAnalysis.message.length > 0 && (
+                  <div className="flex flex-col gap-y-0.5 ml-5 pl-2 border-l border-[#2A2A2A]">
+                    {issue.aiAnalysis.message.map((reason, j) => (
+                      <div key={j} className="flex items-start gap-x-1.5">
+                        <span className="font-mono text-xs text-[#555555] tracking-[-0.05em] shrink-0">
+                          —
+                        </span>
+                        <span className="font-sans text-xs text-[#555555] tracking-[-0.05em]">
+                          {reason}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           ))}
         </div>

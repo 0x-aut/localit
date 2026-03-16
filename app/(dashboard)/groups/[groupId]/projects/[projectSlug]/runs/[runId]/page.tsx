@@ -175,7 +175,7 @@ export default function RunIdPage() {
   const routes = [...new Set(screenshots.map((s) => s.route))];
   const routeViewData = routes.map((route) => {
     const routeShots = screenshots.filter((s) => s.route === route);
-    const baselineShot = routeShots.find((s) => s.locale === "en");
+    const baselineShot = routeShots.find((s) => s.baseline_url); // We will pick any shot and use the baselineshot from there
     const currentShot = routeShots.find((s) => s.locale === selectedLocale);
     const hasIssues = routeShots.some((s) => s.has_regression);
     const diffPct = currentShot?.diff_pct ?? 0;
@@ -189,6 +189,7 @@ export default function RunIdPage() {
             type: d.type as "overflow" | "pixel_diff" | "missing_screenshot",
             description: d.description,
             diffPct: d.diffPct ?? undefined,
+            aiAnalysis: d.aiAnalysis ?? null,
           }))
       );
 
