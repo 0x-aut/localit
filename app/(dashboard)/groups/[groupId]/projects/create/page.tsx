@@ -10,11 +10,9 @@ import * as React from 'react'
 export default function CreateProjectPage({
   params,
 }: {
-  params: { groupId: string };
-  }) {
+  params: Promise<{ groupId: string }>;
+}) {
   const { groupId } = React.use(params);
-  
-  console.log("used to see", React.use(params))
   
   const router = useRouter();
 
