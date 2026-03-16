@@ -53,7 +53,7 @@ export async function proxy(request: NextRequest) {
     }
 
     return NextResponse.redirect(
-      new URL(`/groups/${membership.group_id}/dashboard`, request.url)
+      new URL(`/groups/${membership.group_id}/`, request.url)
     );
   }
 
